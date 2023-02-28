@@ -16,7 +16,7 @@ class CategoryController extends Controller
         $validator = Validator::make($request->all(), [
 
             'name' => 'required',
-            'type' => 'required|in:income,expense',
+            'type' => 'required',
         ]);
 
         if ($validator->fails()) {
