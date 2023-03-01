@@ -2,7 +2,8 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use app\Htpp\Controllers\ControllerTransaction;
+use App\Htpp\Controllers\TransactionController;
+use App\Http\Controllers\RecurringController;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,17 +19,40 @@ use app\Htpp\Controllers\ControllerTransaction;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
-
+Route::group(['prefix' => 'recurrings'], function(){
+    Route::get('/', [RecurringController::class, 'getAll']);
+    Route::delete('/{id}', [RecurringController::class, 'delete']);
+});
 Route::group(['prefix' => 'transactions'], function(){
-    Route::get('/all', [ControllerTransaction::class, "getAll"]);
-    Route::get('/income', [ControllerTransaction::class, "getAllIncome"]);
-    Route::get('/expense', [ControllerTransaction::class, "getAllExpense"]);
-    Route::get('/list', [ControllerTransaction::class, "getAllPagination"]);
-    Route::get('/list/income', [ControllerTransaction::class, "getPaginationIncome"]);
-    Route::get('/list/expense', [ControllerTransaction::class, "getPaginationExpense"]);
-    Route::get('/recurring/{id}', [ControllerTransaction::class, "getRecurring"]);
-    Route::get('/{id}', [ControllerTransaction::class, "getById"]);
-    Route::get('/monthly', [ControllerTransaction::class, "getMonthly"]);
-    Route::get('/mobile/monthly', [ControllerTransaction::class, "getMobileMonthly"]);
-    Route::get('/weekly', [ControllerTransaction::class, "getWeekly"]);
+    Route::get('/all', [TransactionController::class, "getAll"]);
+    Route::get('/income', [TransactionController::class, "getAllIncome"]);
+    Route::get('/expense', [TransactionController::class, "getAllExpense"]);
+    Route::get('/list', [TransactionController::class, "getAllPagination"]);
+    Route::get('/list/income', [TransactionController::class, "getPaginationIncome"]);
+    Route::get('/list/expense', [TransactionController::class, "getPaginationExpense"]);
+    Route::get('/recurring/{id}', [TransactionController::class, "getRecurring"]);
+    Route::get('/{id}', [TransactionController::class, "getById"]);
+    Route::get('/monthly', [TransactionController::class, "getMonthly"]);
+    Route::get('/mobile/monthly', [TransactionController::class, "getMobileMonthly"]);
+    Route::get('/weekly', [TransactionController::class, "getWeekly"]);
+    Route::get('/date', [TransactionController::class, "getByDate"]);
+    Route::get('/latest-transactions', [TransactionController::class, "getLatestTransactions"]);
+    Route::get('/incomes', [TransactionController::class, "getIncome"]);
+    Route::get('/expenses', [TransactionController::class, "getExpense"]);
+    Route::get('/mobile/weekly', [TransactionController::class, "getMobileWeekly"]);
+    Route::get('/yearly', [TransactionController::class, "getYearly"]);
+    Route::get('/mobile/yearly', [TransactionController::class, "getMobileYearly"]);
+    Route::get('/records/category/yearly', [TransactionController::class, "getYearCategoryRecords"]);
+    Route::get('/records/category/monthly', [TransactionController::class, "getMonthCategoryRecords"]);
+    Route::get('/records/category/daily', [TransactionController::class, "getDayCategoryRecords"]);
+
+    Route::post('/create/fixed', [TransactionController::class, "createFixed"]);
+    Route::post('create/recurring', [TransactionController::class, "createRecurring"]);
+
+    Route::put('/edit/fixed/{id}', [TransactionController::class, "updateFixed"]);
+    Route::put('/edit/recurring/{id}', [TransactionController::class, "updateRecurring"]);
+    Route::put('/edit/Allrecurring/{id}', [TransactionController::class, "updateAllRecurring"]);
+
+    Route::delete('/{id}', [TransactionController::class, "delete"]);
+    Route::delete('/delete/recurring/{id}', [TransactionController::class, "deleteRecurring"]);
 });
