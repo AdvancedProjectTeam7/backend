@@ -16,7 +16,7 @@ class CategoryController extends Controller
         $validator = Validator::make($request->all(), [
 
             'name' => 'required',
-            'type' => 'required',
+            'type' => 'required|in:income,expense',
         ]);
 
         if ($validator->fails()) {
@@ -75,12 +75,33 @@ class CategoryController extends Controller
         }
     }
 
+    // get category by name
+    public function getByName($name)
+{
+    $category = Category::where('name', $name)->first();
+    if (!empty($category)) {
+        $category = [
+            'status' => 200,
+            'message' => 'getting category by name',
+            'data' => $category,
+        ];
+        return $category;
+    } else {
+        $error = [
+            'status' => 404,
+            'message' => 'no category with this name',
+            'data' => null,
+        ];
+        return $error;
+    }
+}
+
     // edit category by id
     public function editCategory(Request $request, $id)
     {
         $validator = Validator::make($request->all(), [
             'name' => 'required',
-            'type' => 'required',
+            'type' => 'required|in:income,expense',
         ]);
         $category = Category::find($id);
         if (!$category) {
