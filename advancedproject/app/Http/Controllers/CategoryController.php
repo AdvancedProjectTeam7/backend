@@ -78,7 +78,7 @@ class CategoryController extends Controller
     // get category by name
     public function getByName($name)
 {
-    $category = Category::where('name', $name)->first();
+    $category = Category::where('name', 'like', '%' . $name . '%')->orwhere('type', 'like', '%' . $name . '%')->get();
     if (!empty($category)) {
         $category = [
             'status' => 200,
