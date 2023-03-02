@@ -2,26 +2,28 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\Transaction;
 use App\Models\Recurring;
 use App\Models\Category;
+
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 
-class ControllerTransaction extends Controller
+class TransactionController extends Controller
 {
     public function getAll() {
-        $data = Transaction::where('data', '<=', now())->oderBy('date', 'desc')->get();
-        foreach($data as $each) {
+        
+        $data = Transaction::where('date', '<=', now())->orderBy('date', 'desc')->get();
+        foreach ($data as $each) {
             $each->category;
             $each->recurring;
         }
 
         $respond = [
             "status" => 201,
-            "message" => "Successfully got all the transactions",
+            "message" => "Successfully get all Transactions",
             "data" => $data
         ];
 
@@ -29,15 +31,16 @@ class ControllerTransaction extends Controller
     }
 
     public function getAllIncome() {
-        $data = Transaction::whereRelation("cateogry", "type", 'income')->where('data', '<=', now())->oderBy('date', 'desc')->get();
-        foreach($data as $each) {
+
+        $data = Transaction::whereRelation("category", "type", 'income')->where('date', '<=', now())->orderBy('date', 'desc')->get();
+        foreach ($data as $each) {
             $each->category;
             $each->recurring;
         }
 
         $respond = [
             "status" => 201,
-            "message" => "Successfully got all the Income Transactions",
+            "message" => "Successfully get all Transactions",
             "data" => $data
         ];
 
@@ -45,15 +48,16 @@ class ControllerTransaction extends Controller
     }
 
     public function getAllExpense() {
-        $data = Transaction::whereRelation("category", "type", 'expense')->where('data', '<=', now())->orderBy('date', 'desc')->get();
-        foreach($data as $each) {
+
+        $data = Transaction::whereRelation("category", "type", 'expense')->where('date', '<=', now())->orderBy('date', 'desc')->get();
+        foreach ($data as $each) {
             $each->category;
             $each->recurring;
         }
 
         $respond = [
             "status" => 201,
-            "message" => "Successfully got all the Expense Transactions",
+            "message" => "Successfully get all Transactions",
             "data" => $data
         ];
 
@@ -76,48 +80,53 @@ class ControllerTransaction extends Controller
         return response($respond, $respond["status"]);
     }
 
-    public function getAllPagination() {
-        $data = Transaction::where('data', '<=', now())->orderBy('date', 'desc')->paginate(10);
-        foreach($data as $each) {
+    public function getPaginationAll() {
+
+        $data = Transaction::where('date', '<=', now())->orderBy('date', 'desc')->paginate(10);
+
+        foreach ($data as $each) {
             $each->category;
             $each->recurring;
         }
-
         $respond = [
             "status" => 201,
-            "message" => "Successfully got Transactions",
+            "message" => "Successfully get all Transactions",
             "data" => $data
         ];
 
         return response($respond, $respond["status"]);
     }
 
-    public function getPaginationIncome() {
-        $data = Transaction::whereRelation("category", "type", 'income')->where('data', '<=', now())->orderBy('date', 'desc')->paginate(10);
-        foreach($data as $each) {
+    public function getPaginationincome() {
+
+        $data = Transaction::whereRelation("category", "type", 'income')->where('date', '<=', now())->orderBy('date', 'desc')->paginate(10);
+
+        foreach ($data as $each) {
             $each->category;
             $each->recurring;
         }
 
         $respond = [
             "status" => 201,
-            "message" => "Successfully got Income Transactions",
+            "message" => "Successfully get all Transactions",
             "data" => $data
         ];
 
         return response($respond, $respond["status"]);
     }
 
-    public function getPaginationExpense() {
-        $data = Transaction::whereRelation("category", "type", 'expense')->where('data', '<=', now())->orderBy('date', 'desc')->paginate(10);
-        foreach($data as $each) {
+    public function getPaginationExpenses() {
+
+        $data = Transaction::whereRelation("category", "type", 'expense')->where('date', '<=', now())->orderBy('date', 'desc')->paginate(10);
+
+        foreach ($data as $each) {
             $each->category;
             $each->recurring;
         }
 
         $respond = [
             "status" => 201,
-            "message" => "Successfully got Expense Transactions",
+            "message" => "Successfully get all Transactions",
             "data" => $data
         ];
 
@@ -125,7 +134,7 @@ class ControllerTransaction extends Controller
     }
 
     public function getLatestTransactions() {
-
+        
         $data = Transaction::where('date', '<=', now())->orderBy('date', 'desc')->paginate(5);
 
         foreach ($data as $each) {
@@ -173,20 +182,21 @@ class ControllerTransaction extends Controller
     }
 
     public function getById($id) {
+
         $transaction = Transaction::find($id);
         $transaction->category;
         $transaction->recurring;
 
-        if(isset($transaction)){
+        if (isset($transaction)) {
             $respond = [
                 "status" => 201,
-                "message" => "Successfully got Transaction" . $id,
+                "message" => "Successfully get transaction with id " . $id,
                 "data" => $transaction
             ];
         } else {
             $respond = [
                 "status" => 404,
-                "message" => "id" . $id . "does not exist",
+                "message" => "id " . $id . " does not exist",
                 "data" => $transaction
             ];
         }
@@ -195,22 +205,23 @@ class ControllerTransaction extends Controller
     }
 
     public function getRecurring($id) {
-        $transaction = Transaction::where('recurring_id', $id)->where('data', '<=', now())->oderBy9('date', 'desc')->get();
-        foreach($transaction as $each) {
+
+        $transaction = Transaction::where('recurring_id', $id)->where('date', '<=', now())->orderBy('date', 'desc')->get();
+        foreach ($transaction as $each) {
             $each->category;
             $each->recurring;
         }
 
-        if(isset($transaction)) {
+        if (isset($transaction)) {
             $respond = [
                 "status" => 201,
-                "message" => "Successfully got Recurring Transaction" . $id,
+                "message" => "Successfully get transaction with id " . $id,
                 "data" => $transaction
             ];
         } else {
             $respond = [
                 "status" => 404,
-                "message" => "id" . $id . "does not exist",
+                "message" => "id " . $id . " does not exist",
                 "data" => $transaction
             ];
         }
@@ -219,115 +230,67 @@ class ControllerTransaction extends Controller
     }
 
     public function getMonthly(Request $request) {
-        for($i = 11; $i >=0; $i--) {
-            $month = date("Y-m-d", strtotime(date('Y-m-01') . "-" . $i - $request->query('range') * 12 . "months"));
+
+        for ($i = 11; $i >= 0; $i--) {
+            $month = date("Y-m-d", strtotime(date('Y-m-01') . " -" . $i - $request->query('range') * 12 . " months"));
             $date = Carbon::createFromFormat('Y-m-d', $month);
 
-            $income = Transaction::whereRelation("category", "type", 'income')->where('currency', '=', '$')->where('date', '<=', now())->orderBy('date', 'desc')->whereMonth('date', $date->month)->whereYear('date', $date->year)->sum('amount');
+            $income = Transaction::whereRelation("category", "type", 'income')->where('currency', '=', '$')->where('date', '<=', now())->orderBy('date', 'desc')->whereMonth('date', $date->month)
+                ->whereYear('date', $date->year)
+                ->sum('amount');
+            $incomeLira = Transaction::whereRelation("category", "type", 'income')->where('currency', '=', 'L.L.')->where('date', '<=', now())->orderBy('date', 'desc')->whereMonth('date', $date->month)
+                ->whereYear('date', $date->year)
+                ->sum('amount');
 
-            $incomeLira = Transaction::whereRelation("category", "type", 'income')->where('currency', '=', 'L.L.')->where('date', '<=', now())->orderBy('date', 'desc')->whereMonth('date', $date->month)->whereYear('date', $date->year)->sum('amount');
+            $expense = Transaction::whereRelation("category", "type", 'expense')->where('currency', '=', '$')->where('date', '<=', now())->orderBy('date', 'desc')->whereMonth('date', $date->month)
+                ->whereYear('date', $date->year)
+                ->sum('amount');
+            $expenseLira = Transaction::whereRelation("category", "type", 'expense')->where('currency', '=', 'L.L.')->where('date', '<=', now())->orderBy('date', 'desc')->whereMonth('date', $date->month)
+                ->whereYear('date', $date->year)
+                ->sum('amount');
 
-            $expense = Transaction::whereRelation("category", "type", 'expense')->where('currency', '=', '$')->where('date', '<=', now())->orderBy('date', 'desc')->whereMonth('date', $date->month)->whereYear('date', $date->year)->sum('amount');
-
-            $expenseLira = Transaction::whereRelation("category", "type", 'expense')->where('currency', '=', '$')->where('date', '<=', now())->orderBy('date', 'desc')->whereMonth('date', $date->month)->whereYaer('date', $date->year)->sum('amount');
-
-            $incomeData[] = [
-                "date" => $date->format(' M Y '),
+            $incomedata[] = [
+                "date" => $date->format('M Y'),
                 "amount" => $income + $incomeLira / 1500,
             ];
 
-            $expenseData[] = [
-                "date" => $date->format(' M Y '),
+            $expensedata[] = [
+                "date" => $date->format('M Y'),
                 "amount" => $expense + $expenseLira / 1500,
             ];
         }
 
         $respond = [
             "status" => 201,
-            "message" => "Successfully got the records for the past 12 months",
-            "data" => [$incomeData, $expenseData]
+            "message" => "Successfully records of last 12 months",
+            "data" => [$incomedata, $expensedata]
         ];
 
-        return respone($respond, $respond["status"]);
+        return $respond;
     }
 
-    public function getMobileMonthly(Request $request) {
-        for($i = 5; $i>=0; $i--) {
-            $month = date("Y-m-d", strtotime(date('Y-m-01') . "-" . $i - $request->query('range') * 6 . "months"));
+    public function getMonthlyMobile(Request $request) {
+
+        for ($i = 5; $i >= 0; $i--) {
+            $month = date("Y-m-d", strtotime(date('Y-m-01') . " -" . $i - $request->query('range') * 6 . " months"));
             $date = Carbon::createFromFormat('Y-m-d', $month);
 
-            $income = Transaction::whereRelation("category", "type", 'income')->where('currency', '=', '$')->where('date', '<=', now())->orderBy('date', 'desc')->whereMonth('date', $date->month)->whereYear('date', $date->year)->sum('amount');
+            $income = Transaction::whereRelation("category", "type", 'income')->where('currency', '=', '$')->where('date', '<=', now())->orderBy('date', 'desc')->whereMonth('date', $date->month)
+                ->whereYear('date', $date->year)
+                ->sum('amount');
+            $incomeLira = Transaction::whereRelation("category", "type", 'income')->where('currency', '=', 'L.L.')->where('date', '<=', now())->orderBy('date', 'desc')->whereMonth('date', $date->month)
+                ->whereYear('date', $date->year)
+                ->sum('amount');
 
-            $incomeLira = Transaction::whereRelation("category", "type", 'income')->where('currceny', '=', 'L.L.')->where('date', '<=', now())->orderBy('date', 'desc')->whereMonth('date', $date->month)->whereYear('date', $date->year)->sum('amount');
-
-            $expense = Transaction::whereRelation("category", "type", 'expense')->where('currency', '=', '$')->where('date', '<=', now())->orderBy('date', 'desc')->whereMonth('date', $date->month)->whereYear('date', $date->year)->sum('amount');
-            
-            $expenseLira = Transaction::whereRelation("category", "type", 'expense')->where('currency', '=', 'L.L.')->where('date', '<=', now())->orderBy('date', 'desc')->whereMonth('date', $date->month)->whereYear('date', $date->year)->sum('amount');
-
-           $data[] = [
-            "date" => $date->format(' M Y '),
-            "income" => $income + $incomeLira / 1500,
-            "expense" => $expense + $expenseLira / 1500,
-           ];
-        }
-
-        $respond = [
-            "status" => 201,
-            "message" => "Successfully got the records of the past 6 months",
-            "data" => $data
-        ];
-
-        return response($respond, $respond["status"]);
-    }
-
-    public function getWeekly(Request $request) { 
-        for($i= 6; $i >=0; $i--) {
-            $day = date("Y-m-d", strtotime(date('Y-m-d') . "-" . $i - $request->query('range') * 7 . "days"));
-            $date = Carbon::createFromFormat('Y-m-d', $day);
-
-            $income = Transaction::whereRelation("category", "type", 'income')->where('currency', '=', '$')->where('date', '<=', now())->orderBy('date', 'desc')->whereDay('date', $date->day)->whereMonth('date', $date->month)->whereYear('date', $date->year)->sum('amount');
-
-            $incomeLira = Transaction::whereRelation("category", "type", 'income')->where('currency', '=', 'L.L.')->where('date', '<=', now())->orderBy('date', 'desc')->whereDay('date', $date->day)->whereMonth('date', $date->month)->whereYear('date', $date->year)->sum('amount');
-
-            $expense = Transaction::whereRelation("category", "type", 'expense')->where('currency', '=', '$')->where('date', '<=', now())->orderBy('date', 'desc')->whereDay('date', $date->day)->whereMonth('date', $date->month)->whereYear('date', $date->year)->sum('amount');
-
-            $expenseLira = Transaction::whereRelation("category", "type", 'expense')->where('currency', '=', 'L.L.')->where('date', '<=', now())->orderBy('date', 'desc')->whereDay('date', $date->day)->whereMonth('date', $date->month)->whereYear('date', $date->year)->sum('amount');
-
-            $incomeData[] = [
-                "date" => $date->format(' M Y '),
-                "amount" => $income + $incomeLira / 1500,
-            ];
-
-            $expenseData[] = [
-                "date" => $date->format(' M Y '),
-                "amount" => $expense + $expenseLira / 1500,
-            ];
-        }
-
-        $respond = [
-            "status" => 201,
-            "message" => "Successfully got the records for the past Week",
-            "data" => [$incomeData, $expenseData]
-        ];
-
-        return response($respond, $respond["status"]);
-    }
-
-    public function getMobileWeekly(Request $request) { 
-        for($i= 6; $i >=0; $i--) {
-            $day = date("Y-m-d", strtotime(date('Y-m-d') . "-" . $i - $request->query('range') * 7 . "days"));
-            $date = Carbon::createFromFormat('Y-m-d', $day);
-
-            $income = Transaction::whereRelation("category", "type", 'income')->where('currency', '=', '$')->where('date', '<=', now())->orderBy('date', 'desc')->whereDay('date', $date->day)->whereMonth('date', $date->month)->whereYear('date', $date->year)->sum('amount');
-
-            $incomeLira = Transaction::whereRelation("category", "type", 'income')->where('currency', '=', 'L.L.')->where('date', '<=', now())->orderBy('date', 'desc')->whereDay('date', $date->day)->whereMonth('date', $date->month)->whereYear('date', $date->year)->sum('amount');
-
-            $expense = Transaction::whereRelation("category", "type", 'expense')->where('currency', '=', '$')->where('date', '<=', now())->orderBy('date', 'desc')->whereDay('date', $date->day)->whereMonth('date', $date->month)->whereYear('date', $date->year)->sum('amount');
-
-            $expenseLira = Transaction::whereRelation("category", "type", 'expense')->where('currency', '=', 'L.L.')->where('date', '<=', now())->orderBy('date', 'desc')->whereDay('date', $date->day)->whereMonth('date', $date->month)->whereYear('date', $date->year)->sum('amount');
+            $expense = Transaction::whereRelation("category", "type", 'expense')->where('currency', '=', '$')->where('date', '<=', now())->orderBy('date', 'desc')->whereMonth('date', $date->month)
+                ->whereYear('date', $date->year)
+                ->sum('amount');
+            $expenseLira = Transaction::whereRelation("category", "type", 'expense')->where('currency', '=', 'L.L.')->where('date', '<=', now())->orderBy('date', 'desc')->whereMonth('date', $date->month)
+                ->whereYear('date', $date->year)
+                ->sum('amount');
 
             $data[] = [
-                "date" => $date->format(' M Y '),
+                "date" => $date->format('M Y'),
                 "income" => $income + $incomeLira / 1500,
                 "expense" => $expense + $expenseLira / 1500,
             ];
@@ -335,61 +298,140 @@ class ControllerTransaction extends Controller
 
         $respond = [
             "status" => 201,
-            "message" => "Successfully got the records for the past Week",
+            "message" => "Successfully records of last 12 months",
             "data" => $data
         ];
 
-        return response($respond, $respond["status"]);
+        return $respond;
+    }
+
+    public function getWeekly(Request $request) {
+
+        for ($i = 6; $i >= 0; $i--) {
+            $day = date("Y-m-d", strtotime(date('Y-m-d') . " -" . $i - $request->query('range') * 7 . " days"));
+
+            $date = Carbon::createFromFormat('Y-m-d', $day);
+
+            $income = Transaction::whereRelation("category", "type", 'income')->where('currency', '=', '$')->where('date', '<=', now())->orderBy('date', 'desc')->whereDay('date', $date->day)->whereMonth('date', $date->month)
+                ->whereYear('date', $date->year)
+                ->sum('amount');
+            $incomeLira = Transaction::whereRelation("category", "type", 'income')->where('currency', '=', 'L.L.')->where('date', '<=', now())->orderBy('date', 'desc')->whereDay('date', $date->day)->whereMonth('date', $date->month)
+                ->whereYear('date', $date->year)
+                ->sum('amount');
+
+
+            $expense = Transaction::whereRelation("category", "type", 'expense')->where('currency', '=', '$')->where('date', '<=', now())->orderBy('date', 'desc')->whereDay('date', $date->day)->whereMonth('date', $date->month)
+                ->whereYear('date', $date->year)
+                ->sum('amount');
+            $expenseLira = Transaction::whereRelation("category", "type", 'expense')->where('currency', '=', 'L.L.')->where('date', '<=', now())->orderBy('date', 'desc')->whereDay('date', $date->day)->whereMonth('date', $date->month)
+                ->whereYear('date', $date->year)
+                ->sum('amount');
+
+            $incomedata[] = [
+                "date" => $date->format('D d M Y'),
+                "amount" => $income + $incomeLira / 1500,
+            ];
+
+            $expensedata[] = [
+                "date" => $date->format('D d M Y'),
+                "amount" => $expense + $expenseLira / 1500,
+            ];
+        }
+
+        $respond = [
+            "status" => 201,
+            "message" => "Successfully get records of last 7 days",
+            "data" => [$incomedata, $expensedata]
+        ];
+
+        return $respond;
+    }
+    public function getWeeklyMobile(Request $request) {
+
+        for ($i = 6; $i >= 0; $i--) {
+            $day = date("Y-m-d", strtotime(date('Y-m-d') . " -" . $i - $request->query('range') * 7 . " days"));
+
+            $date = Carbon::createFromFormat('Y-m-d', $day);
+
+            $income = Transaction::whereRelation("category", "type", 'income')->where('currency', '=', '$')->where('date', '<=', now())->orderBy('date', 'desc')->whereDay('date', $date->day)->whereMonth('date', $date->month)
+                ->whereYear('date', $date->year)
+                ->sum('amount');
+            $incomeLira = Transaction::whereRelation("category", "type", 'income')->where('currency', '=', 'L.L.')->where('date', '<=', now())->orderBy('date', 'desc')->whereDay('date', $date->day)->whereMonth('date', $date->month)
+                ->whereYear('date', $date->year)
+                ->sum('amount');
+
+
+            $expense = Transaction::whereRelation("category", "type", 'expense')->where('currency', '=', '$')->where('date', '<=', now())->orderBy('date', 'desc')->whereDay('date', $date->day)->whereMonth('date', $date->month)
+                ->whereYear('date', $date->year)
+                ->sum('amount');
+            $expenseLira = Transaction::whereRelation("category", "type", 'expense')->where('currency', '=', 'L.L.')->where('date', '<=', now())->orderBy('date', 'desc')->whereDay('date', $date->day)->whereMonth('date', $date->month)
+                ->whereYear('date', $date->year)
+                ->sum('amount');
+
+            $data[] = [
+                "date" => $date->format('d M Y'),
+                "income" => $income + $incomeLira / 1500,
+                "expense" => $expense + $expenseLira / 1500,
+            ];
+        }
+
+        $respond = [
+            "status" => 201,
+            "message" => "Successfully get records of last 7 days",
+            "data" => $data
+        ];
+
+        return $respond;
     }
 
     public function getYearly(Request $request) {
-        for($i = 4; $i >=0; $i-- ){
-            $day = date("Y-m-d", strtotime(date('Y-m-d') . "-" . $i - $request->query('range') * 5 . "years"));
+
+        for ($i = 4; $i >= 0; $i--) {
+            $day = date("Y-m-d", strtotime(date('Y-m-d') . " -" . $i - $request->query('range') * 5 . " years"));
+
             $date = Carbon::createFromFormat('Y-m-d', $day);
 
             $income = Transaction::whereRelation("category", "type", 'income')->where('currency', '=', '$')->where('date', '<=', now())->orderBy('date', 'desc')->whereYear('date', $date->year)->sum('amount');
-
-            $incomeLira = Transaction::whereRelation("category", "type", 'income')->where('currency', '=', 'L.L.')->where('date', '<=', now())->orderBy('date', 'desc')->whereYear('date', $date->year)->sum('amount');
+            $incomeLira = Transaction::whereRelation("category", "type", 'income')->where('currency', '=', 'L.L.')->where('date', '<=', now())->orderBy('date', 'desc')->sum('amount');
 
             $expense = Transaction::whereRelation("category", "type", 'expense')->where('currency', '=', '$')->where('date', '<=', now())->orderBy('date', 'desc')->whereYear('date', $date->year)->sum('amount');
+            $expenseLira = Transaction::whereRelation("category", "type", 'expense')->where('currency', '=', 'L.L.')->where('date', '<=', now())->orderBy('date', 'desc')->sum('amount');
 
-            $expenseLira = Transaction::whereRelation("category", "type", 'expense')->where('currency', '=', 'L.L.')->where('date', '<=', now())->orderBy('date', 'desc')->whereYear('date', $date->year)->sum('amount');
-
-            $incomeData[] = [
-                "date" => $date->format(' M Y '),
+            $incomedata[] = [
+                "date" => $date->format('Y'),
                 "amount" => $income + $incomeLira / 1500,
             ];
 
-            $expenseData[] = [
-                "date" => $date->format(' M Y '),
+            $expensedata[] = [
+                "date" => $date->format('Y'),
                 "amount" => $expense + $expenseLira / 1500,
             ];
         }
 
         $respond = [
             "status" => 201,
-            "message" => "Successfully got the transactions for the past 5 years",
-            "data" => [$incomeLira, $expenseLira]
+            "message" => "Successfully get records of last 5 years",
+            "data" => [$incomedata, $expensedata]
         ];
 
-        return response($respond, $respond["status"]);
+        return $respond;
     }
 
-    public function getMobileYearly(Request $request) {
-        for($i = 4; $i >=0; $i-- ){
-            $day = date("Y-m-d", strtotime(date('Y-m-d') . "-" . $i - $request->query('range') * 5 . "years"));
+    public function getYearlyMobile(Request $request) {
+
+        for ($i = 4; $i >= 0; $i--) {
+            $day = date("Y-m-d", strtotime(date('Y-m-d') . " -" . $i - $request->query('range') * 5 . " years"));
+
             $date = Carbon::createFromFormat('Y-m-d', $day);
 
             $income = Transaction::whereRelation("category", "type", 'income')->where('currency', '=', '$')->where('date', '<=', now())->orderBy('date', 'desc')->whereYear('date', $date->year)->sum('amount');
-
-            $incomeLira = Transaction::whereRelation("category", "type", 'income')->where('currency', '=', 'L.L.')->where('date', '<=', now())->orderBy('date', 'desc')->whereYear('date', $date->year)->sum('amount');
+            $incomeLira = Transaction::whereRelation("category", "type", 'income')->where('currency', '=', 'L.L.')->where('date', '<=', now())->orderBy('date', 'desc')->sum('amount');
 
             $expense = Transaction::whereRelation("category", "type", 'expense')->where('currency', '=', '$')->where('date', '<=', now())->orderBy('date', 'desc')->whereYear('date', $date->year)->sum('amount');
-
-            $expenseLira = Transaction::whereRelation("category", "type", 'expense')->where('currency', '=', 'L.L.')->where('date', '<=', now())->orderBy('date', 'desc')->whereYear('date', $date->year)->sum('amount');
+            $expenseLira = Transaction::whereRelation("category", "type", 'expense')->where('currency', '=', 'L.L.')->where('date', '<=', now())->orderBy('date', 'desc')->sum('amount');
 
             $data[] = [
-                "date" => $date->format(' M Y '),
+                "date" => $date->format('Y'),
                 "income" => $income + $incomeLira / 1500,
                 "expense" => $expense + $expenseLira / 1500,
             ];
@@ -397,16 +439,17 @@ class ControllerTransaction extends Controller
 
         $respond = [
             "status" => 201,
-            "message" => "Successfully got the transactions for the past 5 years",
+            "message" => "Successfully get records of last 5 years",
             "data" => $data
         ];
 
-        return response($respond, $respond["status"]);
+        return $respond;
     }
 
     public function getYearCategoryRecords(Request $request) {
 
         $year = date("Y-m-d", strtotime(date('Y-m-d') . " +" . $request->query('range') . " years"));
+
         $date = Carbon::createFromFormat('Y-m-d', $year);
 
 
@@ -440,12 +483,13 @@ class ControllerTransaction extends Controller
             "data" => [$incomedata, $expensedata]
         ];
 
-        return response($respond, $respond["status"]);
+        return $respond;
     }
 
     public function getMonthCategoryRecords(Request $request) {
 
         $year = date("Y-m-d", strtotime(date('Y-m-d') . " +" . $request->query('range') . " months"));
+
         $date = Carbon::createFromFormat('Y-m-d', $year);
 
 
@@ -479,12 +523,13 @@ class ControllerTransaction extends Controller
             "data" => [$incomedata, $expensedata]
         ];
 
-        return response($respond, $respond["status"]);
+        return $respond;
     }
 
     public function getDayCategoryRecords(Request $request) {
 
         $year = date("Y-m-d", strtotime(date('Y-m-d') . " +" . $request->query('range') . " days"));
+
         $date = Carbon::createFromFormat('Y-m-d', $year);
 
 
@@ -517,7 +562,7 @@ class ControllerTransaction extends Controller
             "data" => [$incomedata, $expensedata]
         ];
 
-        return response($respond, $respond["status"]);
+        return $respond;
     }
 
     public function createFixed(Request $request) {
@@ -554,7 +599,8 @@ class ControllerTransaction extends Controller
                 "data" => $transaction
             ];
         }
-        return response($respond, $respond["status"]);
+
+        return response($respond);
     }
 
     public function createRecurring(Request $request) {
@@ -623,7 +669,7 @@ class ControllerTransaction extends Controller
             ];
         }
 
-        return response($respond, $respond["status"]);
+        return response($respond);
     }
 
     public function updateFixed(Request $request, $id) {
@@ -669,7 +715,7 @@ class ControllerTransaction extends Controller
             }
         }
 
-        return response($respond, $respond["status"]);
+        return response($respond);
     }
 
     public function updateRecurring(Request $request, $id) {
@@ -730,10 +776,11 @@ class ControllerTransaction extends Controller
             }
         }
 
-        return response($respond, $respond["status"]);
+        return response($respond);
     }
 
     public function updateAllRecurring(Request $request, $id) {
+
         $validator = Validator::make($request->all(), [
             'title' => "string",
             'description' => "string",
@@ -783,8 +830,6 @@ class ControllerTransaction extends Controller
                     $date = date_format($date, 'Y-m-d');
                     array_push($dates, $date);
                 }
-
-
 
                 foreach ($dates as $date) {
                     $transaction = new Transaction;
@@ -842,7 +887,7 @@ class ControllerTransaction extends Controller
             }
         }
 
-        return response($respond, $respond["status"]);
+        return response($respond);
     }
 
     public function delete($id) {
@@ -863,6 +908,7 @@ class ControllerTransaction extends Controller
                 "data" => $transaction
             ];
         }
+
         return response($respond, $respond["status"]);
     }
 
@@ -884,8 +930,7 @@ class ControllerTransaction extends Controller
                 "data" => $transaction
             ];
         }
-        
+
         return response($respond, $respond["status"]);
     }
 }
-
