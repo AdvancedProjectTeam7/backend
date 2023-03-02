@@ -7,5 +7,15 @@ use Illuminate\Database\Eloquent\Model;
 
 class Transaction extends Model
 {
-    use HasFactory;
+    protected $fillable = ['title', 'description', 'categories_id', 'currency', "amount", "date", 'recurring_id'];
+
+    public function category()
+    {
+        return $this->belongsTo(Category::class);
+    }
+
+    public function recurring()
+    {
+        return $this->belongsTo(Recurring::class);
+    }
 }
