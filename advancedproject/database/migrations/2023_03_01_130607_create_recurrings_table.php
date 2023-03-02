@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('recurrings', function (Blueprint $table) {
-            $table->increments('id');
+            $table->id();
             $table->string('name')->nullable();
             $table->string('start_date')->nullable();
             $table->string('end_date')->nullable();
