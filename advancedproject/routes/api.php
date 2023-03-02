@@ -6,6 +6,7 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ProfitController;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\RecurringController;
+use App\Http\Controllers\CurrencyController;
 
 /*
 |--------------------------------------------------------------------------
@@ -73,3 +74,9 @@ Route::group(['prefix' => 'transactions'], function(){
     Route::delete('/{id}', [TransactionController::class, "delete"]);
     Route::delete('/delete/recurring/{id}', [TransactionController::class, "deleteRecurring"]);
 });
+Route::Post('/currency', [CurrencyController::class, 'addCurrency']);
+Route::Get('/currency/{id}', [CurrencyController::class, 'getCurrency']);
+Route::Get('/currency', [CurrencyController::class, 'getAllCurrency']);
+Route::Get('/currency/name/{name}', [CurrencyController::class, 'getByName']);
+Route::Put('/currency/{id}', [CurrencyController::class, 'editCurrency']);
+Route::delete('/currency/{id}', [CurrencyController::class, 'deleteCurrency']);
