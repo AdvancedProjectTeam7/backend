@@ -77,24 +77,28 @@ class CategoryController extends Controller
 
     // get category by name
     public function getByName($name)
-{
-    $category = Category::where('name', 'like', '%' . $name . '%')->orwhere('type', 'like', '%' . $name . '%')->get();
-    if (!$category->isEmpty() && $category[0]->name == $name) {
-        $category = [
-            'status' => 200,
-            'message' => 'getting category by name',
-            'data' => $category,
-        ];
-        return $category;
-    } else {
-        $error = [
-            'status' => 404,
-            'message' => 'no category with this name',
-            'data' => null,
-        ];
-        return $error;
+    {
+        $category = Category::where(function ($query) use ($name) {
+            $query->where('name', 'like', '%' . $name . '%')
+                ->orWhere('type', 'like', '%' . $name . '%');
+        })->get();
+
+        if (!$category->isEmpty()) {
+            $response = [
+                'status' => 200,
+                'message' => 'getting category by name or type',
+                'data' => $category,
+            ];
+            return $response;
+        } else {
+            $error = [
+                'status' => 404,
+                'message' => 'no category found with this name or type',
+                'data' => null,
+            ];
+            return $error;
+        }
     }
-}
 
     // edit category by id
     public function editCategory(Request $request, $id)
