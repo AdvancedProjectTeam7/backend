@@ -12,16 +12,19 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('transactions', function (Blueprint $table) {
-            $table->id();
-            
+            $table->increments('id');
+
             $table->string('title')->nullable();
             $table->text('description')->nullable();
-            $table->integer('amount')->nullable();
-            $table->char('currency')->nullable();
-            
+
             $table->integer('category_id')->unsigned()->nullable();
             $table->foreign('category_id')->references('id')->on('categories');
-            
+
+            $table->integer('amount')->nullable();
+            $table->char('currency')->nullable();
+
+            $table->date('date')->nullable();
+
             $table->integer('recurring_id')->unsigned()->nullable();
             $table->foreign('recurring_id')->references('id')->on('recurrings')->onDelete('cascade');
 
