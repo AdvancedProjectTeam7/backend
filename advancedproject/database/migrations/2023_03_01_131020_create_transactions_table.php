@@ -17,15 +17,15 @@ return new class extends Migration
             $table->string('title')->nullable();
             $table->text('description')->nullable();
 
-            $table->integer('category_id')->unsigned()->nullable();
+            $table->BigInteger('category_id')->unsigned()->nullable();
             $table->foreign('category_id')->references('id')->on('categories');
 
-            $table->integer('amount')->nullable();
+            $table->BigInteger('amount')->nullable();
             $table->char('currency')->nullable();
 
             $table->date('date')->nullable();
 
-            $table->integer('recurring_id')->unsigned()->nullable();
+            $table->BigInteger('recurring_id')->unsigned()->nullable();
             $table->foreign('recurring_id')->references('id')->on('recurrings')->onDelete('cascade');
 
             $table->timestamps();
