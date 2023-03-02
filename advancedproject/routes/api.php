@@ -4,7 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ProfitController;
-use App\Htpp\Controllers\TransactionController;
+use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\RecurringController;
 
 /*
