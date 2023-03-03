@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Htpp\Controllers\TransactionController;
 use App\Http\Controllers\RecurringController;
+use App\Http\Controllers\AuthController;
 
 /*
 |--------------------------------------------------------------------------
@@ -55,4 +56,15 @@ Route::group(['prefix' => 'transactions'], function(){
 
     Route::delete('/{id}', [TransactionController::class, "delete"]);
     Route::delete('/delete/recurring/{id}', [TransactionController::class, "deleteRecurring"]);
+});
+
+Route::group([
+    'middleware' => 'api',
+    'prefix' => 'auth'
+], function ($router) {
+    Route::post('/login', [AuthController::class, 'login']);
+    Route::post('/register', [AuthController::class, 'register']);
+    Route::post('/logout', [AuthController::class, 'logout']);
+    Route::post('/refresh', [AuthController::class, 'refresh']);
+    Route::get('/user-profile', [AuthController::class, 'userProfile']);    
 });
