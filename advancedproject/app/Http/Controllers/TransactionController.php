@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Transaction;
 use App\Models\Recurring;
 use App\Models\Category;
+use App\Models\Currency;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -572,7 +573,7 @@ class TransactionController extends Controller
             'description' => "required|string",
             'category_id' => "required|numeric|min:1",
             'amount' => "required|numeric|min:1",
-            'currency' =>  "required|in:USD,$,L.L.",
+            'currency_id' =>  "required",
             'date' => 'required|date|before:tomorrow',
         ]);
 
@@ -588,10 +589,14 @@ class TransactionController extends Controller
             $transaction->description = $request->description;
             $transaction->category_id = $request->category_id;
             $transaction->amount = $request->amount;
-            $transaction->currency = $request->currency;
+
             $transaction->date = $request->date;
             $transaction->recurring_id = null;
             $transaction->save();
+
+            $currency_id = $request->input('currency');
+            $currency = Currency::find($currency_id);
+            $transaction->currency()->associate($currency);
 
             $respond = [
                 "status" => 201,
@@ -610,7 +615,7 @@ class TransactionController extends Controller
             'description' => "required|string",
             'category_id' => "required|numeric|min:1",
             'amount' => "required|numeric|min:1",
-            'currency' =>  "required|in:USD,$,L.L.",
+            'currency_id' =>  "required",
             'start_date' => 'required|date|before:tomorrow',
             'end_date' => 'required|date|after:today',
             'duration' => 'required|numeric|min:1',
@@ -650,7 +655,11 @@ class TransactionController extends Controller
                 $transaction->description = $request->description;
                 $transaction->category_id = $request->category_id;
                 $transaction->amount = $request->amount;
-                $transaction->currency = $request->currency;
+
+                $currency_id = $request->input('currency');
+                $currency = Currency::find($currency_id);
+                $transaction->currency()->associate($currency);
+                
                 $transaction->date = $date;
                 $transaction->recurring_id = $recurring->id;
                 $transaction->save();

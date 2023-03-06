@@ -4,11 +4,10 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ProfitController;
-// <<<<<<< HEAD
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\RecurringController;
+use App\Http\Controllers\CurrencyController;
 
-// =======
 use App\Http\Controllers\AuthController;
 // >>>>>>> authentication-fatina
 /*
