@@ -4,9 +4,13 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ProfitController;
+<<<<<<< HEAD
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\RecurringController;
 
+=======
+use App\Http\Controllers\AuthController;
+>>>>>>> authentication-fatina
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -35,6 +39,7 @@ Route::Get('/profit/{id}', [ProfitController::class, 'getProfit']);
 Route::Get('/profit', [ProfitController::class, 'getAllProfit']);
 Route::Patch('/profit/{id}', [ProfitController::class, 'editProfit']);
 Route::delete('/profit/{id}', [ProfitController::class, 'deleteProfit']);
+<<<<<<< HEAD
 Route::group(['prefix' => 'recurrings'], function(){
     Route::get('/', [RecurringController::class, 'getAll']);
     Route::delete('/{id}', [RecurringController::class, 'delete']);
@@ -73,3 +78,23 @@ Route::group(['prefix' => 'transactions'], function(){
     Route::delete('/{id}', [TransactionController::class, "delete"]);
     Route::delete('/delete/recurring/{id}', [TransactionController::class, "deleteRecurring"]);
 });
+=======
+
+//Authentication routes
+
+Route::group([
+    'middleware' => 'api',
+    'prefix' => 'auth'
+], function ($router) {
+    Route::post('/login', [AuthController::class, 'login']);
+    Route::post('/register', [AuthController::class, 'register']);
+
+});
+
+Route::Patch('/updateuser/{id}', [AuthController::class, 'edituser']);
+Route::Get('/getuser/{id}', [AuthController::class, 'getadmin']);
+Route::Get('/getall', [AuthController::class, 'getAlluser']);
+Route::delete('/delete/{id}', [AuthController::class, 'deleteuser']);
+Route::post('/logout', [AuthController::class, 'logout']);
+Route::get('/user-profile', [AuthController::class, 'userProfile']);
+>>>>>>> authentication-fatina
