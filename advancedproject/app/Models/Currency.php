@@ -12,4 +12,7 @@ class Currency extends Model
         'name',
         'rate',
     ];
+    public function Transaction(){
+        return $this -> hasMany (Transaction::class);
+    }
 }

@@ -15,6 +15,7 @@ class CurrencyController extends Controller
 
             'name' => 'required',
             'rate' => 'required',
+            
         ]);
 
         if ($validator->fails()) {
@@ -29,6 +30,7 @@ class CurrencyController extends Controller
             $currency = new currency;
             $currency->name = $request->name;
             $currency->rate = $request->rate;
+
             $currency->save();
             $respond = [
                 'status' => 200,
