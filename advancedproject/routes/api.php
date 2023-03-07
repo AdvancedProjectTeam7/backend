@@ -74,7 +74,7 @@ Route::group(['prefix' => 'transactions'], function(){
     Route::put('/edit/recurring/{id}', [TransactionController::class, "updateRecurring"]);
     Route::put('/edit/Allrecurring/{id}', [TransactionController::class, "updateAllRecurring"]);
 
-    Route::delete('/{id}', [TransactionController::class, "delete"]);
+    Route::delete('/delete/{id}', [TransactionController::class, "delete"]);
     Route::delete('/delete/recurring/{id}', [TransactionController::class, "deleteRecurring"]);
 });
 // =======
