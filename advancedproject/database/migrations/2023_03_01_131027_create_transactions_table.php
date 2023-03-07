@@ -19,11 +19,9 @@ return new class extends Migration
 
             $table->BigInteger('category_id')->unsigned()->nullable();
             $table->foreign('category_id')->references('id')->on('categories');
-            
-            $table->BigInteger('amount')->nullable();
 
-            $table->BigInteger('currency_id')->unsigned()->nullable();
-            $table->foreign('currency_id')->references('id')->on('currencies');
+            $table->BigInteger('amount')->nullable();
+            $table->char('currency')->nullable();
 
             $table->date('date')->nullable();
 
