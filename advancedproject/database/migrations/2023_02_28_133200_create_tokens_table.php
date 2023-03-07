@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('tokens', function (Blueprint $table) {
+        Schema::create('tokens', function (Blueprint $table) {
 
             $table->bigIncrements('id');
             $table->morphs('tokenable');
