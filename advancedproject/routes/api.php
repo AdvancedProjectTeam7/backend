@@ -88,7 +88,7 @@ Route::group([
     Route::post('/login', [AuthController::class, 'login']);
     Route::post('/register', [AuthController::class, 'register']);
 
-});
+
 
 Route::Patch('/updateuser/{id}', [AuthController::class, 'edituser']);
 Route::Get('/getuser/{id}', [AuthController::class, 'getadmin']);
@@ -96,4 +96,5 @@ Route::Get('/getall', [AuthController::class, 'getAlluser']);
 Route::delete('/delete/{id}', [AuthController::class, 'deleteuser']);
 Route::post('/logout', [AuthController::class, 'logout']);
 Route::get('/user-profile', [AuthController::class, 'userProfile']);
+});
 // >>>>>>> authentication-fatina
